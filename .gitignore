@@ -3,7 +3,6 @@
 temp/
 spi_test
 *.pro.user
-Makefile
 rpistm
 moc_*.*
 *.sh
