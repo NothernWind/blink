@@ -23,12 +23,12 @@ static void blink_timer_callback(unsigned long data)
 	printk(KERN_NOTICE "timer_callback called (%ld): %lu.\n", jiffies, data);
 	led_status = (led_status) ? 0 : 1;
 	gpio_set_value(led_gpio_pin, led_status);
-	
+	mod_timer(&blink_timer, jiffies + msecs_to_jiffies(blink_time));
 }
 
 static int __init GPIO26_init(void)
 {
-	int gprq;
+	int r;
 	printk(KERN_NOTICE "gpio_init\n");
 	led.gpio = led_gpio_pin;
 	led.flags = GPIOF_OUT_INIT_LOW;
@@ -39,9 +39,9 @@ static int __init GPIO26_init(void)
 		return -1;
 	}
 	
-	gprq = gpio_request(led_gpio_pin,"Blue LED");
+	r = gpio_request(led_gpio_pin,"Blue LED");
 	
-	if (gprq) {
+	if (r) {
 		printk(KERN_ALERT "Gpio request failed.\n");
 		return -2;
     }
@@ -50,6 +50,11 @@ static int __init GPIO26_init(void)
 	gpio_direction_output(led_gpio_pin, 0);
 	printk(KERN_NOTICE "LED On\n");
 	gpio_set_value(led_gpio_pin, led_status);
+	
+	setup_timer(&blink_timer, blink_timer_callback, 10);
+	
+	r = mod_timer(&blink_timer, jiffies + msecs_to_jiffies(blink_time));
+	if (r) printk(KERN_ALERT "Error in mod_timer\n");
 	
 	return 0;
 }

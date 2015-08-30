@@ -3,7 +3,7 @@ PWD = $(shell pwd)
 TARGET = blink
 
 obj-m := $(TARGET).o
-№
+
 all:
 	$(MAKE) -C $(KDIR) M=$(PWD) modules
 
