@@ -10,7 +10,7 @@ MODULE_DESCRIPTION("LED Driver. LED connected to GPIO26");
 
 static int led_gpio_pin = 26;
 static int led_status = 0;
-static int blink_time = 100000;
+static int blink_time = 1000;
 
 static struct gpio led;
 static struct timer_list blink_timer; 
