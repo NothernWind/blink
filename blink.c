@@ -33,29 +33,29 @@ static int __init GPIO26_init(void)
 	led.gpio = led_gpio_pin;
 	led.flags = GPIOF_OUT_INIT_LOW;
 	led.label = "Blue LED";
-	
+
 	if (!gpio_is_valid(led_gpio_pin)) {
 		printk(KERN_ALERT " GPIO number %d not valid.\n", led_gpio_pin);
 		return -1;
 	}
-	
+
 	r = gpio_request(led_gpio_pin,"Blue LED");
-	
+
 	if (r) {
 		printk(KERN_ALERT "Gpio request failed.\n");
 		return -2;
     }
-	
+
 	printk(KERN_NOTICE "Set GPIO26 direction output\n");
 	gpio_direction_output(led_gpio_pin, 0);
 	printk(KERN_NOTICE "LED On\n");
 	gpio_set_value(led_gpio_pin, led_status);
-	
+
 	setup_timer(&blink_timer, blink_timer_callback, 10);
-	
+
 	r = mod_timer(&blink_timer, jiffies + msecs_to_jiffies(blink_time));
 	if (r) printk(KERN_ALERT "Error in mod_timer\n");
-	
+
 	return 0;
 }
 
