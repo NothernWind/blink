@@ -13,7 +13,7 @@ static int led_status = 0;
 static int blink_time = 1000;
 
 static struct gpio led;
-static struct timer_list blink_timer; 
+static struct timer_list blink_timer;
 
 module_param(led_gpio_pin, int, 0755);
 module_param(blink_time, int, 0755);
@@ -61,9 +61,12 @@ static int __init GPIO26_init(void)
 
 static void __exit GPIO26_exit(void)
 {
+	int r;
 	printk(KERN_NOTICE "LED Off\n");
 	gpio_set_value(led_gpio_pin, 0);
 	gpio_free(led.gpio);
+	r = del_timer(&blink_timer);
+	if (r) printk(KERN_ALERT "Error stp timer...\n");
 	printk(KERN_NOTICE "ldrv module exit\n");
 }
 
